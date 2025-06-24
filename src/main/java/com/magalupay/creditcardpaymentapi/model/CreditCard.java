@@ -2,10 +2,14 @@ package com.magalupay.creditcardpaymentapi.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
+import java.util.List;
 
 @Entity
 @Table(name = "credit_cards")
-@Data // já inclui @Getter, @Setter, @ToString, @EqualsAndHashCode e @RequiredArgsConstructor
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -26,5 +30,10 @@ public class CreditCard {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
+    @JsonBackReference
     private User user;
+
+    @OneToMany(mappedBy = "creditCard", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
+    private List<Transaction> transactions;
 }

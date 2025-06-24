@@ -88,9 +88,15 @@ Todos estendem `JpaRepository`, com suporte a operações básicas de persistên
 - Integração com Springdoc OpenAPI
 - Documentação dos endpoints REST gerada automaticamente em `/swagger-ui.html`
 
+![Swagger UI](./docs/Swagger.png)
+
 ---
 
 ## 🧪 Testes Realizados
+
+Os testes automatizados garantem que os principais serviços da aplicação estão funcionando corretamente, mesmo após alterações no código. Eles ajudam a evitar regressões e facilitam a manutenção do sistema.
+
+Foram utilizados testes unitários com o framework JUnit 5 e Mockito para simular comportamentos dos repositórios e validar o funcionamento isolado das regras de negócio.
 
 Comando executado:
 
@@ -102,8 +108,9 @@ Resultado esperado:
 
 ```yaml
 BUILD SUCCESS
-Tests run: 6, Failures: 0, Errors: 0
+Tests run: 5, Failures: 0, Errors: 0
 ```
+![Resultado dos Testes](./docs/Testes.png)
 
 ---
 

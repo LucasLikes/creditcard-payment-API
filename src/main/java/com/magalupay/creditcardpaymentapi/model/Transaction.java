@@ -2,6 +2,7 @@ package com.magalupay.creditcardpaymentapi.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -26,5 +27,6 @@ public class Transaction {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "credit_card_id")
+    @JsonBackReference
     private CreditCard creditCard;
 }
