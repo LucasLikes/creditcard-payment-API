@@ -94,10 +94,11 @@ Todos estendem `JpaRepository`, com suporte a operações básicas de persistên
 
 ## 🐇 Mensageria - RabbitMQ
 
-- Implementação inicial de publicação e consumo de eventos com RabbitMQ
-- Testes para publicação e recepção de eventos usando Spring AMQP
-- Testes integrados que validam o fluxo de mensagens
-- Imagem ilustrativa do teste RabbitMQ executado:
+- Implementação do fluxo de mensageria para comunicação assíncrona via RabbitMQ, possibilitando desacoplamento entre componentes do sistema.
+- Configuração do publisher para envio de eventos de pagamento aprovados, garantindo que notificações sejam enviadas de forma confiável.
+- Desenvolvimento do consumer que escuta as mensagens da fila, processando eventos recebidos para ações subsequentes.
+- Criação de testes automatizados que validam a publicação e o consumo dos eventos, garantindo a integridade do fluxo de mensagens durante a execução da aplicação.
+- Demonstração prática do funcionamento via teste integrado, evidenciada pela imagem do teste RabbitMQ executado com sucesso:
 
 ![Teste RabbitMQ](./docs/TestRabbitMQ.png)
 
