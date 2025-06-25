@@ -92,6 +92,17 @@ Todos estendem `JpaRepository`, com suporte a operações básicas de persistên
 
 ---
 
+## 🐇 Mensageria - RabbitMQ
+
+- Implementação inicial de publicação e consumo de eventos com RabbitMQ
+- Testes para publicação e recepção de eventos usando Spring AMQP
+- Testes integrados que validam o fluxo de mensagens
+- Imagem ilustrativa do teste RabbitMQ executado:
+
+![Teste RabbitMQ](./docs/TestRabbitMQ.png)
+
+---
+
 ## 🧪 Testes Realizados
 
 Os testes automatizados garantem que os principais serviços da aplicação estão funcionando corretamente, mesmo após alterações no código. Eles ajudam a evitar regressões e facilitam a manutenção do sistema.
