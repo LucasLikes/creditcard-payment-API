@@ -1,8 +1,8 @@
 package com.magalupay.creditcardpaymentapi.controller;
 
+import com.magalupay.creditcardpaymentapi.dto.UserDTO;
 import com.magalupay.creditcardpaymentapi.model.User;
 import com.magalupay.creditcardpaymentapi.service.UserService;
-import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -18,27 +18,30 @@ public class UserController {
 
     private final UserService userService;
 
-    @Operation(summary = "Cria um novo usuário")
     @PostMapping
-    public ResponseEntity<User> createUser(@RequestBody User user) {
-        return ResponseEntity.status(201).body(userService.saveUser(user));
+    public ResponseEntity<UserDTO> createUser(@RequestBody UserDTO userDTO) {
+        User user = userService.fromDTO(userDTO);
+        User savedUser = userService.saveUser(user);
+        return ResponseEntity.status(201).body(userService.toDTO(savedUser));
     }
 
-    @Operation(summary = "Lista todos os usuários")
     @GetMapping
-    public List<User> listUsers() {
-        return userService.getAllUsers();
+    public ResponseEntity<List<UserDTO>> listUsers() {
+        List<User> users = userService.getAllUsers();
+        List<UserDTO> dtos = users.stream()
+                                  .map(userService::toDTO)
+                                  .toList();
+        return ResponseEntity.ok(dtos);
     }
 
-    @Operation(summary = "Busca um usuário por ID")
     @GetMapping("/{id}")
-    public ResponseEntity<User> getUser(@PathVariable Long id) {
+    public ResponseEntity<UserDTO> getUser(@PathVariable Long id) {
         return userService.getUserById(id)
+                .map(userService::toDTO)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    @Operation(summary = "Exclui um usuário por ID")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
         userService.deleteUser(id);

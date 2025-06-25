@@ -2,13 +2,16 @@ package com.magalupay.creditcardpaymentapi.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "transactions")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -27,6 +30,6 @@ public class Transaction {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "credit_card_id")
-    @JsonBackReference
+    @JsonBackReference 
     private CreditCard creditCard;
 }

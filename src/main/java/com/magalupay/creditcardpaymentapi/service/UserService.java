@@ -1,5 +1,8 @@
 package com.magalupay.creditcardpaymentapi.service;
 
+import com.magalupay.creditcardpaymentapi.dto.CreditCardDTO;
+import com.magalupay.creditcardpaymentapi.dto.UserDTO;
+import com.magalupay.creditcardpaymentapi.model.CreditCard;
 import com.magalupay.creditcardpaymentapi.model.User;
 import com.magalupay.creditcardpaymentapi.repository.UserRepository;
 import org.springframework.stereotype.Service;
@@ -31,5 +34,43 @@ public class UserService {
 
     public void deleteUser(Long id) {
         userRepository.deleteById(id);
+    }
+
+    public UserDTO toDTO(User user) {
+        if (user == null)
+            return null;
+
+        List<CreditCardDTO> cards = user.getCreditCards() == null ? List.of()
+                : user.getCreditCards().stream()
+                        .map(card -> new CreditCardDTO(
+                                card.getId(),
+                                card.getCardNumber(),
+                                card.getCardHolder(),
+                                card.getExpirationDate()))
+                        .toList();
+
+        return new UserDTO(user.getId(), user.getName(), user.getEmail(), cards);
+    }
+
+    public User fromDTO(UserDTO dto) {
+        if (dto == null)
+            return null;
+
+        List<CreditCard> cards = dto.getCreditCards() == null ? List.of()
+                : dto.getCreditCards().stream()
+                        .map(cardDto -> CreditCard.builder()
+                                .id(cardDto.getId())
+                                .cardNumber(cardDto.getCardNumber())
+                                .cardHolder(cardDto.getCardHolder())
+                                .expirationDate(cardDto.getExpirationDate())
+                                .build())
+                        .toList();
+
+        return User.builder()
+                .id(dto.getId())
+                .name(dto.getName())
+                .email(dto.getEmail())
+                .creditCards(cards)
+                .build();
     }
 }
