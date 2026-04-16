@@ -21,7 +21,16 @@ public class PaymentEventPublisher {
     private String routingKey;
 
     public void publishPaymentApproved(PaymentApprovedEvent event) {
-        log.info("Publicando evento de pagamento aprovado: {}", event);
+        try {
+            log.info("Publishing payment approved event: transactionId={}, amount={}", event.getTransactionId(), event.getAmount());
+            rabbitTemplate.convertAndSend(exchange, routingKey, event);
+            log.info("Payment event published successfully");
+        } catch (Exception e) {
+            log.error("Error publishing payment event", e);
+            throw e;
+        }
+    //
+        // log.info("Publicando evento de pagamento aprovado: {}", event);
         rabbitTemplate.convertAndSend(exchange, routingKey, event);
     }
 }

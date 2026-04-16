@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <!-- Spring Boot default configuration location -->
+    <include resource="org/springframework/boot/logging/logback/defaults.xml" />
+    
+    <!-- Property defaults -->
+    <springProperty scope="context" name="springAppName" source="spring.application.name" defaultValue="creditcard-payment-api"/>
+    <springProperty scope="context" name="logLevel" source="logging.level.root" defaultValue="INFO"/>
+
+    <!-- Profiles: dev (text), prod (JSON) -->
+    
+    <!-- ==================== DEV PROFILE: Text Console Logging ==================== -->
+    <springProfile name="dev">
+        <property name="LOG_FILE" value="${LOG_FILE:-${LOG_PATH:-${LOG_TEMP:-${java.io.tmpdir:-/tmp}}/spring.log}}"/>
+        
+        <!-- Console Appender (colored) -->
+        <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+            <encoder>
+                <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+                <charset>utf8</charset>
+            </encoder>
+        </appender>
+
+        <!-- File Appender (rolling) -->
+        <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+            <file>${LOG_FILE}</file>
+            <encoder>
+                <pattern>%d{ISO8601} [%thread] %-5level %logger{36} - %msg%n</pattern>
+                <charset>utf8</charset>
+            </encoder>
+            <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+                <fileNamePattern>${LOG_FILE}.%d{yyyy-MM-dd}.%i.gz</fileNamePattern>
+                <maxFileSize>100MB</maxFileSize>
+                <maxHistory>7</maxHistory>
+            </rollingPolicy>
+        </appender>
+
+        <!-- Root logger -->
+        <root level="INFO">
+            <appender-ref ref="CONSOLE"/>
+            <appender-ref ref="FILE"/>
+        </root>
+
+        <!-- Specific loggers -->
+        <logger name="com.magalupay" level="DEBUG"/>
+        <logger name="org.springframework.web" level="DEBUG"/>
+        <logger name="org.springframework.security" level="DEBUG"/>
+    </springProfile>
+
+    <!-- ==================== PROD PROFILE: JSON Logging (ELK/Datadog) ==================== -->
+    <springProfile name="prod">
+        <property name="LOG_FILE" value="${LOG_FILE:-/var/log/application/creditcard-payment-api.log}"/>
+
+        <!-- JSON Console Appender (for log aggregation services) -->
+        <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+            <encoder class="net.logstash.logback.encoder.LogstashEncoder">
+                <customFields>{"service":"${springAppName}","environment":"production"}</customFields>
+                <timestampPattern>yyyy-MM-dd'T'HH:mm:ss.SSSZ</timestampPattern>
+                <includeMdcKeyName>true</includeMdcKeyName>
+            </encoder>
+        </appender>
+
+        <!-- JSON File Appender (rolling) -->
+        <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+            <file>${LOG_FILE}</file>
+            <encoder class="net.logstash.logback.encoder.LogstashEncoder">
+                <customFields>{"service":"${springAppName}","environment":"production"}</customFields>
+                <timestampPattern>yyyy-MM-dd'T'HH:mm:ss.SSSZ</timestampPattern>
+                <includeMdcKeyName>true</includeMdcKeyName>
+            </encoder>
+            <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+                <fileNamePattern>${LOG_FILE}.%d{yyyy-MM-dd}.%i.gz</fileNamePattern>
+                <maxFileSize>500MB</maxFileSize>
+                <maxHistory>30</maxHistory>
+            </rollingPolicy>
+        </appender>
+
+        <!-- Root logger -->
+        <root level="WARN">
+            <appender-ref ref="CONSOLE"/>
+            <appender-ref ref="FILE"/>
+        </root>
+
+        <!-- Application loggers -->
+        <logger name="com.magalupay" level="INFO"/>
+        <logger name="org.springframework.security" level="WARN"/>
+        <logger name="org.springframework.amqp" level="INFO"/>
+    </springProfile>
+
+</configuration>

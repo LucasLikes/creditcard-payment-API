@@ -11,7 +11,13 @@ import java.util.List;
 @NoArgsConstructor
 public class UserDTO {
     private Long id;
+
+    @jakarta.validation.constraints.NotBlank
     private String name;
+
+    @jakarta.validation.constraints.Email
+    @jakarta.validation.constraints.NotBlank
     private String email;
+
     private List<CreditCardDTO> creditCards;
 }
