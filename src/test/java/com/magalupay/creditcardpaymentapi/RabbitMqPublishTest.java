@@ -10,9 +10,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.awaitility.Awaitility.await;
 
 import java.math.BigDecimal;
 import java.time.Instant;
+import java.util.concurrent.TimeUnit;
 
 @SpringBootTest(properties = {
         "app.rabbitmq.exchange=payment.exchange",
@@ -29,7 +31,7 @@ public class RabbitMqPublishTest {
     private PaymentEventListener paymentEventListener;
 
     @Test
-    public void testPublishPaymentApproved() throws InterruptedException {
+    public void testPublishPaymentApproved() {
         PaymentApprovedEvent event = PaymentApprovedEvent.builder()
             .transactionId("txn123")
             .amount(new BigDecimal("123.45"))
@@ -38,7 +40,7 @@ public class RabbitMqPublishTest {
 
         paymentEventPublisher.publishPaymentApproved(event);
 
-        Thread.sleep(1000);  // espera o listener processar
+        await().atMost(2, TimeUnit.SECONDS).until(() -> paymentEventListener.getLastEvent() != null);
 
         PaymentApprovedEvent receivedEvent = paymentEventListener.getLastEvent();
 
@@ -48,4 +50,5 @@ public class RabbitMqPublishTest {
         assertEquals(event.getTimestamp(), receivedEvent.getTimestamp());
     }
 }
+
 

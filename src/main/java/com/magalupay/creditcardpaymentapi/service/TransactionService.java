@@ -16,18 +16,26 @@
         }
 
         public Transaction saveTransaction(Transaction transaction) {
+        log.info("Saving transaction: {}", transaction);
+
             return transactionRepository.save(transaction);
         }
 
         public List<Transaction> getAllTransactions() {
+        log.info("Fetching all transactions");
+
             return transactionRepository.findAll();
         }
 
         public Optional<Transaction> getTransactionById(Long id) {
+        log.info("Fetching transaction by id: {}", id);
+
             return transactionRepository.findById(id);
         }
 
         public void deleteTransaction(Long id) {
+        log.info("Deleting transaction by id: {}", id);
+
             transactionRepository.deleteById(id);
         }
     }

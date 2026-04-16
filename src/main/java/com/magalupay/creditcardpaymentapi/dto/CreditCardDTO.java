@@ -9,7 +9,13 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class CreditCardDTO {
     private Long id;
+
+    @jakarta.validation.constraints.NotBlank
     private String cardNumber;
+
+    @jakarta.validation.constraints.NotBlank
     private String cardHolder;
+
+    @jakarta.validation.constraints.NotBlank
     private String expirationDate;
 }
